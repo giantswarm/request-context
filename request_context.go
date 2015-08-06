@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	separator = "|"
+	separator = " | "
 )
 
 var (
@@ -141,7 +141,7 @@ func (l Logger) extendFormat(ctx Ctx, f string) string {
 
 	format := f
 	if meta != "" {
-		format += " " + separator + " " + meta
+		format += separator + meta
 	}
 
 	return format
