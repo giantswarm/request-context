@@ -52,7 +52,6 @@ func MustGetLogger(config LoggerConfig) Logger {
 	format := strings.Join([]string{
 		"%{time:2006-01-02 15:04:05}",
 		"%{level}",
-		"%{longfile}",
 		"%{message}",
 	}, separator)
 
