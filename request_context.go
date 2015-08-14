@@ -13,17 +13,6 @@ const (
 	separator = " | "
 )
 
-var (
-	levels = map[string]int{
-		"critical": 0,
-		"error":    1,
-		"warning":  2,
-		"notice":   3,
-		"info":     4,
-		"debug":    5,
-	}
-)
-
 type Ctx map[string]interface{}
 
 func (ctx Ctx) isEmpty() bool {
@@ -77,7 +66,7 @@ func MustGetLogger(config LoggerConfig) Logger {
 }
 
 func (l Logger) Critical(ctx Ctx, f string, v ...interface{}) {
-	if !l.isEnabledFor("critical") {
+	if !l.logger.IsEnabledFor(logging.CRITICAL) {
 		return
 	}
 
@@ -85,7 +74,7 @@ func (l Logger) Critical(ctx Ctx, f string, v ...interface{}) {
 }
 
 func (l Logger) Error(ctx Ctx, f string, v ...interface{}) {
-	if !l.isEnabledFor("error") {
+	if !l.logger.IsEnabledFor(logging.ERROR) {
 		return
 	}
 
@@ -93,7 +82,7 @@ func (l Logger) Error(ctx Ctx, f string, v ...interface{}) {
 }
 
 func (l Logger) Warning(ctx Ctx, f string, v ...interface{}) {
-	if !l.isEnabledFor("warning") {
+	if !l.logger.IsEnabledFor(logging.WARNING) {
 		return
 	}
 
@@ -101,7 +90,7 @@ func (l Logger) Warning(ctx Ctx, f string, v ...interface{}) {
 }
 
 func (l Logger) Notice(ctx Ctx, f string, v ...interface{}) {
-	if !l.isEnabledFor("notice") {
+	if !l.logger.IsEnabledFor(logging.NOTICE) {
 		return
 	}
 
@@ -109,7 +98,7 @@ func (l Logger) Notice(ctx Ctx, f string, v ...interface{}) {
 }
 
 func (l Logger) Info(ctx Ctx, f string, v ...interface{}) {
-	if !l.isEnabledFor("info") {
+	if !l.logger.IsEnabledFor(logging.INFO) {
 		return
 	}
 
@@ -117,15 +106,11 @@ func (l Logger) Info(ctx Ctx, f string, v ...interface{}) {
 }
 
 func (l Logger) Debug(ctx Ctx, f string, v ...interface{}) {
-	if !l.isEnabledFor("debug") {
+	if !l.logger.IsEnabledFor(logging.DEBUG) {
 		return
 	}
 
 	l.logger.Debug(l.extendFormat(ctx, f), v...)
-}
-
-func (l Logger) isEnabledFor(level string) bool {
-	return levels[level] <= levels[l.config.Level]
 }
 
 func (l Logger) extendFormat(ctx Ctx, f string) string {
