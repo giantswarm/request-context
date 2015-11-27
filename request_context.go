@@ -25,9 +25,10 @@ type Logger struct {
 }
 
 type LoggerConfig struct {
-	Name  string
-	Level string
-	Color bool
+	Name                string
+	Level               string
+	Color               bool
+	IncludeNameInFormat bool
 }
 
 // NewSimpleLogger creates a new logger with a default backend logging to `os.Stderr`.
@@ -49,6 +50,9 @@ func (l Logger) setupBacked(config LoggerConfig) {
 		"%{level}",
 		"%{message}",
 	}, separator)
+	if config.IncludeNameInFormat {
+		format = format + separator + "%{name}"
+	}
 
 	formatter := logging.MustStringFormatter(format)
 	backend := logging.NewLogBackend(os.Stderr, "", 0)
