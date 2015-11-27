@@ -51,7 +51,7 @@ func (l Logger) setupBacked(config LoggerConfig) {
 		"%{message}",
 	}, separator)
 	if config.IncludeNameInFormat {
-		format = format + separator + "%{name}"
+		format = format + separator + "%{module}"
 	}
 
 	formatter := logging.MustStringFormatter(format)
