@@ -37,6 +37,12 @@ func MustGetLogger(config LoggerConfig) Logger {
 		logger: logging.MustGetLogger(config.Name),
 	}
 
+	logger.setupBacked(config)
+
+	return logger
+}
+
+func (l Logger) setupBacked(config LoggerConfig) {
 	// See https://godoc.org/github.com/op/go-logging#NewStringFormatter for format verbs.
 	format := strings.Join([]string{
 		"%{time:2006-01-02 15:04:05}",
@@ -60,9 +66,7 @@ func MustGetLogger(config LoggerConfig) Logger {
 		leveledBackend.SetLevel(logLevel, config.Name)
 	}
 
-	logger.logger.SetBackend(leveledBackend)
-
-	return logger
+	l.logger.SetBackend(leveledBackend)
 }
 
 func (l Logger) Critical(ctx Ctx, f string, v ...interface{}) {
