@@ -40,7 +40,7 @@ func (lg *loggerRegistry) MustCreate(name string, level ...string) Logger {
 	}
 
 	config := lg.defaultConfig
-	config.Name = lg.defaultConfig.Name + "." + name
+	config.Name = name
 	if len(level) == 1 {
 		config.Level = level[0]
 	} else if len(level) > 1 {
