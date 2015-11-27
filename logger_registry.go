@@ -9,7 +9,7 @@ import (
 
 // LoggerRegistry provides the api for a registry of loggers.
 type LoggerRegistry interface {
-	MustCreate(config LoggerConfig) Logger
+	MustCreate(name string) Logger
 	Get(name string) (Logger, error)
 	List() []string
 	GetLevel(name string) (string, error)
@@ -17,28 +17,32 @@ type LoggerRegistry interface {
 }
 
 type loggerRegistry struct {
-	loggers map[string]Logger
-	mutex   sync.Mutex
+	defaultConfig LoggerConfig
+	loggers       map[string]Logger
+	mutex         sync.Mutex
 }
 
 // NewLoggerRegistry creates and initializes a new LoggerRegistry.
-func NewLoggerRegistry() LoggerRegistry {
+func NewLoggerRegistry(defaultConfig LoggerConfig) LoggerRegistry {
 	return &loggerRegistry{
-		loggers: make(map[string]Logger),
+		defaultConfig: defaultConfig,
+		loggers:       make(map[string]Logger),
 	}
 }
 
 // MustCreate creates a new logger and registers it.
-func (lg *loggerRegistry) MustCreate(config LoggerConfig) Logger {
+func (lg *loggerRegistry) MustCreate(name string) Logger {
 	lg.mutex.Lock()
 	defer lg.mutex.Unlock()
 
-	if _, ok := lg.loggers[config.Name]; ok {
-		panic(fmt.Sprintf("A logger named '%s' already exists", config.Name))
+	if _, ok := lg.loggers[name]; ok {
+		panic(fmt.Sprintf("A logger named '%s' already exists", name))
 	}
 
+	config := lg.defaultConfig
+	config.Name = lg.defaultConfig.Name + "." + name
 	l := MustGetLogger(config)
-	lg.loggers[config.Name] = l
+	lg.loggers[name] = l
 	return l
 }
 
