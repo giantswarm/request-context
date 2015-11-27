@@ -9,7 +9,7 @@ import (
 
 // LoggerRegistry provides the api for a registry of loggers.
 type LoggerRegistry interface {
-	MustCreate(name string) Logger
+	MustCreate(name string, level ...string) Logger
 	Get(name string) (Logger, error)
 	List() []string
 	GetLevel(name string) (string, error)
@@ -31,7 +31,7 @@ func NewLoggerRegistry(defaultConfig LoggerConfig) LoggerRegistry {
 }
 
 // MustCreate creates a new logger and registers it.
-func (lg *loggerRegistry) MustCreate(name string) Logger {
+func (lg *loggerRegistry) MustCreate(name string, level ...string) Logger {
 	lg.mutex.Lock()
 	defer lg.mutex.Unlock()
 
@@ -41,8 +41,14 @@ func (lg *loggerRegistry) MustCreate(name string) Logger {
 
 	config := lg.defaultConfig
 	config.Name = lg.defaultConfig.Name + "." + name
+	if len(level) == 1 {
+		config.Level = level[0]
+	} else if len(level) > 1 {
+		panic("Can only have 1 log level")
+	}
 	l := MustGetLogger(config)
 	lg.loggers[name] = l
+
 	return l
 }
 
