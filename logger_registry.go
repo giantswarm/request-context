@@ -9,10 +9,18 @@ import (
 
 // LoggerRegistry provides the api for a registry of loggers.
 type LoggerRegistry interface {
+	// MustCreate creates a new logger and registers it.
+	// You can pass an optional level argument to override the default log level in
+	// the new logger.
 	MustCreate(name string, level ...string) Logger
+	// Get returns the logger with given name or NotFoundError if no such logger
+	// exists.
 	Get(name string) (Logger, error)
+	// List returns a list of names of all registered loggers
 	List() []string
+	// GetLevel returns the current log level of the logger with given name
 	GetLevel(name string) (string, error)
+	// SetLevel changes the log level of the logger with given name
 	SetLevel(name, level string) error
 }
 
@@ -31,6 +39,8 @@ func NewLoggerRegistry(defaultConfig LoggerConfig) LoggerRegistry {
 }
 
 // MustCreate creates a new logger and registers it.
+// You can pass an optional level argument to override the default log level in
+// the new logger.
 func (lg *loggerRegistry) MustCreate(name string, level ...string) Logger {
 	lg.mutex.Lock()
 	defer lg.mutex.Unlock()
