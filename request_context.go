@@ -25,9 +25,10 @@ type Logger struct {
 }
 
 type LoggerConfig struct {
-	Name  string
-	Level string
-	Color bool
+	Name                string
+	Level               string
+	Color               bool
+	IncludeNameInFormat bool
 }
 
 // NewSimpleLogger creates a new logger with a default backend logging to `os.Stderr`.
@@ -37,12 +38,21 @@ func MustGetLogger(config LoggerConfig) Logger {
 		logger: logging.MustGetLogger(config.Name),
 	}
 
+	logger.setupBacked(config)
+
+	return logger
+}
+
+func (l Logger) setupBacked(config LoggerConfig) {
 	// See https://godoc.org/github.com/op/go-logging#NewStringFormatter for format verbs.
 	format := strings.Join([]string{
 		"%{time:2006-01-02 15:04:05}",
 		"%{level}",
 		"%{message}",
 	}, separator)
+	if config.IncludeNameInFormat {
+		format = format + separator + "%{module}"
+	}
 
 	formatter := logging.MustStringFormatter(format)
 	backend := logging.NewLogBackend(os.Stderr, "", 0)
@@ -60,9 +70,7 @@ func MustGetLogger(config LoggerConfig) Logger {
 		leveledBackend.SetLevel(logLevel, config.Name)
 	}
 
-	logger.logger.SetBackend(leveledBackend)
-
-	return logger
+	l.logger.SetBackend(leveledBackend)
 }
 
 func (l Logger) Critical(ctx Ctx, f string, v ...interface{}) {
