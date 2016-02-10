@@ -86,7 +86,7 @@ func (l Logger) Error(ctx Ctx, f string, v ...interface{}) {
 		return
 	}
 
-	l.logger.Error(l.extendFormat(ctx, f), v...)
+	l.logger.Errorf(l.extendFormat(ctx, f), v...)
 }
 
 func (l Logger) Warning(ctx Ctx, f string, v ...interface{}) {
