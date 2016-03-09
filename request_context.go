@@ -73,14 +73,16 @@ func (l Logger) setupBacked(config LoggerConfig) {
 	l.logger.SetBackend(leveledBackend)
 }
 
+// Critical prints a critical message to the underlying logger, if enabled
 func (l Logger) Critical(ctx Ctx, f string, v ...interface{}) {
 	if !l.logger.IsEnabledFor(logging.CRITICAL) {
 		return
 	}
 
-	l.logger.Critical(l.extendFormat(ctx, f), v...)
+	l.logger.Criticalf(l.extendFormat(ctx, f), v...)
 }
 
+// Error prints a error message to the underlying logger, if enabled
 func (l Logger) Error(ctx Ctx, f string, v ...interface{}) {
 	if !l.logger.IsEnabledFor(logging.ERROR) {
 		return
@@ -89,36 +91,40 @@ func (l Logger) Error(ctx Ctx, f string, v ...interface{}) {
 	l.logger.Errorf(l.extendFormat(ctx, f), v...)
 }
 
+// Warning prints a warning message to the underlying logger, if enabled
 func (l Logger) Warning(ctx Ctx, f string, v ...interface{}) {
 	if !l.logger.IsEnabledFor(logging.WARNING) {
 		return
 	}
 
-	l.logger.Warning(l.extendFormat(ctx, f), v...)
+	l.logger.Warningf(l.extendFormat(ctx, f), v...)
 }
 
+// Notice prints a notice message to the underlying logger, if enabled
 func (l Logger) Notice(ctx Ctx, f string, v ...interface{}) {
 	if !l.logger.IsEnabledFor(logging.NOTICE) {
 		return
 	}
 
-	l.logger.Notice(l.extendFormat(ctx, f), v...)
+	l.logger.Noticef(l.extendFormat(ctx, f), v...)
 }
 
+// Info prints a info message to the underlying logger, if enabled
 func (l Logger) Info(ctx Ctx, f string, v ...interface{}) {
 	if !l.logger.IsEnabledFor(logging.INFO) {
 		return
 	}
 
-	l.logger.Info(l.extendFormat(ctx, f), v...)
+	l.logger.Infof(l.extendFormat(ctx, f), v...)
 }
 
+// Debug prints a debug message to the underlying logger, if enabled
 func (l Logger) Debug(ctx Ctx, f string, v ...interface{}) {
 	if !l.logger.IsEnabledFor(logging.DEBUG) {
 		return
 	}
 
-	l.logger.Debug(l.extendFormat(ctx, f), v...)
+	l.logger.Debugf(l.extendFormat(ctx, f), v...)
 }
 
 func (l Logger) extendFormat(ctx Ctx, f string) string {
