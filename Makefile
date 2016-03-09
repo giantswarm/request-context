@@ -24,9 +24,10 @@ get-deps: .gobuild
 .gobuild:
 	mkdir -p $(GS_PATH)
 	cd "$(GS_PATH)" && ln -s ../../../.. $(PROJECT)
-	
+
 	# Pin versions of certain libs
-	@builder get dep -b b2cb9fa56473e98db8caba80237377e83fe44db5 https://github.com/op/go-logging.git $(GOPATH)/src/github.com/op/go-logging
+	@GOPATH=$(GOPATH) builder get get gopkg.in/op/go-logging.v1
+	@GOPATH=$(GOPATH) builder get get github.com/juju/errgo
 
 	#
 	# Fetch public dependencies via `go get`
