@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/op/go-logging"
+	"gopkg.in/op/go-logging.v1"
 )
 
 // LoggerRegistry provides the api for a registry of loggers.

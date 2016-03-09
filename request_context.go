@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/juju/errgo"
-	"github.com/op/go-logging"
+	"gopkg.in/op/go-logging.v1"
 )
 
 const (
